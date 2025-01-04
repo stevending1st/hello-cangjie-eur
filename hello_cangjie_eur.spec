@@ -1,9 +1,9 @@
 Name:           hello-cangjie-eur
-Version:        v0.0.4
+Version:        v0.0.5
 Release:        1%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
-Source:         https://gitee.com/stevending1st/%{name}/repository/blazearchive/%{version}.tar.gz
+Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  wget, dnf-plugins-core, binutils, glibc-devel, gcc-c++, openssl
 
