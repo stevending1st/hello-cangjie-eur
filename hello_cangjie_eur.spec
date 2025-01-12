@@ -27,7 +27,7 @@ A demo for Cangjie and Eur.
 %prep
 %autosetup -n %{name}-%{version}
 cd %{_builddir}/%{name}-%{version}
-./create_crt_links.sh
+bash ./create_crt_links.sh
 
 %build
 cd %{_builddir}
