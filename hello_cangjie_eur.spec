@@ -1,5 +1,5 @@
 Name:           hello-cangjie-eur
-Version:        0.0.5
+Version:        0.0.6
 Release:        1%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
@@ -26,6 +26,8 @@ A demo for Cangjie and Eur.
 
 %prep
 %autosetup -n %{name}-%{version}
+cd %{_builddir}/%{name}-%{version}
+./create_crt_links.sh
 
 %build
 cd %{_builddir}
