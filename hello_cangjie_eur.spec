@@ -10,15 +10,8 @@ BuildRequires:  wget, dnf-plugins-core, binutils, glibc-devel, gcc-c++, openssl
 %description
 A demo for Cangjie and Eur.
 
-
 %global debug_package %{nil}
 
-# 检查文件是否存在，并设置一个宏
-if [ ! -f %{_builddir}/Cangjie-0.53.13-linux_x64.tar.gz ]; then
-   %global file_not_exists 1
-else
-   %global file_not_exists 0
-fi
 
 # 根据环境设置下载地址
 %ifarch x86_64
@@ -38,9 +31,10 @@ fi
 %build
 cd %{_builddir}
 
-%if %{file_not_exists}
-  wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
-%endif
+# 检查文件是否存在，并设置一个宏
+if [ ! -f %{_builddir}/Cangjie-0.53.13-linux.tar.gz ]; then
+   wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
+fi
 
 tar xvf Cangjie-0.53.13-linux.tar.gz
 
