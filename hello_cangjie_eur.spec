@@ -3,7 +3,7 @@ Version:        v0.0.5
 Release:        1%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
-Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/%{version}.tar.gz
+Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  wget, dnf-plugins-core, binutils, glibc-devel, gcc-c++, openssl
 
@@ -14,32 +14,42 @@ A demo for Cangjie and Eur.
 %global debug_package %{nil}
 
 # 检查文件是否存在，并设置一个宏
-%global file_exists 0
 if [ ! -f %{_builddir}/Cangjie-0.53.13-linux_x64.tar.gz ]; then
    %global file_not_exists 1
 else
    %global file_not_exists 0
 fi
 
+# 根据环境设置下载地址
+%ifarch x86_64
+# 这里的指令仅在 x86_64 架构下运行
+   %global download_url "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=Cangjie-0.53.13-linux_x64.tar.gz&objectKey=6719f1eb3af6947e3c6af327"
+%endif
+
+%ifarch aarch64 armv7hl armv7l
+# 这里的指令仅在 ARM 架构下运行（这里包括了32位和64位）
+   %global download_url "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=Cangjie-0.53.13-darwin_aarch64.tar.gz&objectKey=6719f1b33af6947e3c6af322"
+%endif
+
 
 %prep
-%setup -q
+%autosetup -n %{name}-%{version}
 
 %build
 cd %{_builddir}
 
 %if %{file_not_exists}
-  wget -O Cangjie-0.53.13-linux_x64.tar.gz "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=Cangjie-0.53.13-linux_x64.tar.gz&objectKey=6719f1eb3af6947e3c6af327"
+  wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
 %endif
 
-tar xvf Cangjie-0.53.13-linux_x64.tar.gz
-source %{_builddir}/cangjie/envsetup.sh
+tar xvf Cangjie-0.53.13-linux.tar.gz
 
 
 %install
-cd %{_builddir}/%{name}-%{version}
-rm -rf %{_buildrootdir}
-cjpm install --root %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}
+cd %{_builddir}/%{name}
+rm -rf %{_buildrootdir}/*
+source %{_builddir}/cangjie/envsetup.sh
+cjpm install --root %{_buildrootdir}/%{name}-%{version}-%{release}
 
 
 %clean
