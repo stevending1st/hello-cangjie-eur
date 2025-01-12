@@ -12,6 +12,13 @@ A demo for Cangjie and Eur.
 
 %global debug_package %{nil}
 
+# 检查文件是否存在，并设置一个宏
+if [ ! -f %{_builddir}/Cangjie-0.53.13-linux_x64.tar.gz ]; then
+   %global file_not_exists 1
+else
+   %global file_not_exists 0
+fi
+
 
 # 根据环境设置下载地址
 %ifarch x86_64
@@ -31,19 +38,18 @@ A demo for Cangjie and Eur.
 %build
 cd %{_builddir}
 
-# 检查文件是否存在，并设置一个宏
-if [ ! -f %{_builddir}/Cangjie-0.53.13-linux.tar.gz ]; then
-   wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
-fi
+%if %{file_not_exists}
+  wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
+%endif
 
 tar xvf Cangjie-0.53.13-linux.tar.gz
 
 
 %install
-cd %{_builddir}/%{name}
+cd %{_builddir}/%{name}-%{version}
 rm -rf %{_buildrootdir}/*
 source %{_builddir}/cangjie/envsetup.sh
-cjpm install --root %{_buildrootdir}/%{name}-%{version}-%{release}
+cjpm install --root %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}
 
 
 %clean
