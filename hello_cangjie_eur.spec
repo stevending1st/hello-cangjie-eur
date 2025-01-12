@@ -31,7 +31,7 @@ A demo for Cangjie and Eur.
 cd %{_builddir}
 
 # 检查文件是否存在，并设置一个宏
-if [ ! -f %{_builddir}/Cangjie-0.53.13-linux.tar.gz ]
+if [ ! -f %{_builddir}/Cangjie-0.53.13-linux.tar.gz ]; then
    wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
 fi
 
