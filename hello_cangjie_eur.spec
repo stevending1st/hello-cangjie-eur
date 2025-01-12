@@ -1,5 +1,5 @@
 Name:           hello-cangjie-eur
-Version:        v0.0.5
+Version:        0.0.5
 Release:        1%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
