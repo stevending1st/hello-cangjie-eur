@@ -1,35 +1,43 @@
 #!/bin/bash
 
-# 确保脚本以 root 权限运行
-# if [ "$EUID" -ne 0 ]; then
-#   echo "请以 root 用户或使用 sudo 运行此脚本"
-#   exit 1
-# fi
+# 定义函数：根据提供的文件名查找文件并创建软链接
+create_symlink_for_file() {
+  # 检查是否提供了文件名参数
+  if [ -z "$1" ]; then
+    echo "Usage: create_symlink_for_file <filename to search for>"
+    return 1
+  fi
 
-# 查找 crtbeginS.o 并创建符号链接
-CRTBEGIN=$(find /usr/lib -name "crtbeginS.o" | head -n 1)
-if [ -n "$CRTBEGIN" ]; then
-    if [ -e "/usr/lib/crtbeginS.o" ]; then
-        echo "警告: /usr/lib/crtbeginS.o 已存在，不会覆盖"
-    else
-        ln -s $CRTBEGIN /usr/lib/crtbeginS.o
-        echo "已创建符号链接: /usr/lib/crtbeginS.o -> $CRTBEGIN"
-    fi
-else
-    echo "未能找到 crtbeginS.o 文件"
-fi
+  # 定义要查找的文件名
+  TARGET_FILE="$1"
 
-# 查找 crtendS.o 并创建符号链接
-CRTEND=$(find /usr/lib -name "crtendS.o" | head -n 1)
-if [ -n "$CRTEND" ]; then
-    if [ -e "/usr/lib/crtendS.o" ]; then
-        echo "警告: /usr/lib/crtendS.o 已存在，不会覆盖"
-    else
-        ln -s $CRTEND /usr/lib/crtendS.o
-        echo "已创建符号链接: /usr/lib/crtendS.o -> $CRTEND"
-    fi
-else
-    echo "未能找到 crtendS.o 文件"
-fi
+  # 查找文件，这里假设你在类 Unix 系统上
+  # 注意：搜索可能会花费一些时间，取决于系统大小和文件位置
+  SEARCH_PATH=$(find /usr/lib -name "$TARGET_FILE" | head -n 1)
 
-echo "完成所有操作"
+  # 检查是否找到了文件
+  if [ -z "$SEARCH_PATH" ]; then
+    echo "$TARGET_FILE file not found"
+    return 1
+  else
+    echo "Found $TARGET_FILE file at: $SEARCH_PATH"
+  fi
+
+  # 获取脚本所在的目录
+  SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
+  # 创建软链接前先检查是否已经存在同名文件或链接
+  if [ -e "$SCRIPT_DIR/$TARGET_FILE" ] || [ -L "$SCRIPT_DIR/$TARGET_FILE" ]; then
+    echo "Warning: $SCRIPT_DIR/$TARGET_FILE already exists, will not overwrite."
+    return 1
+  fi
+
+  # 创建软链接
+  ln -s "$SEARCH_PATH" "$SCRIPT_DIR/$TARGET_FILE"
+
+  echo "Symlink created at: $SCRIPT_DIR/$TARGET_FILE"
+}
+
+# 创建 crtbeginS.o 软连接
+create_symlink_for_file "crtbeginS.o"
+create_symlink_for_file "crtendS.o"

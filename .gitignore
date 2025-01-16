@@ -11,3 +11,7 @@ env_bak.json
 env_bak1.json
 env_bak2.json
 env_bak3.json
+
+# GCC
+crtbeginS.o
+crtendS.o
