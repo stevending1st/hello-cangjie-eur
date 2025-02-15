@@ -20,7 +20,7 @@ A demo for Cangjie and Eur.
 
 %ifarch aarch64 armv7hl armv7l
 # 这里的指令仅在 ARM 架构下运行（这里包括了32位和64位）
-   %global download_url "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=Cangjie-0.53.13-darwin_aarch64.tar.gz&objectKey=6719f1b33af6947e3c6af322"
+   %global download_url "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=Cangjie-0.53.13-linux_aarch64.tar.gz&objectKey=6719f1ec3af6947e3c6af328"
 %endif
 
 
