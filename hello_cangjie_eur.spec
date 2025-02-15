@@ -1,6 +1,6 @@
 Name:           hello-cangjie-eur
 Version:        0.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
 Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/v%{version}.tar.gz
@@ -83,8 +83,6 @@ echo "alias main='/usr/bin/%{name}'" >> ~/.bashrc
 
 %postun
 rm -rf %{_libdir}/cangjie
-rm -rf /usr/bin/%{name}
-rm -rf /bin/%{name}
 
 sed -i '\|source .*/cangjie/envsetup.sh|d' ~/.bashrc
 sed -i "\|alias main='/usr/bin/%{name}'|d" ~/.bashrc
