@@ -1,6 +1,6 @@
 Name:           hello-cangjie-eur
 Version:        0.0.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
 Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/v%{version}.tar.gz
@@ -75,28 +75,88 @@ cd %{_libdir}
 # tar xvf Cangjie-0.53.13-linux.tar.gz
 # rm -rf Cangjie-0.53.13-linux.tar.gz
 
-echo "================================"
-echo $HOME/.bashrc
-cat $HOME/.bashrc
-echo "================================"
-echo "source %{_libdir}/cangjie/envsetup.sh" >> $HOME/.bashrc
-cat $HOME/.bashrc
-echo "================================"
-source $HOME/.bashrc
+# echo "================================"
+# echo $HOME/.bashrc
+# cat $HOME/.bashrc
+# echo "================================"
+# echo "source %{_libdir}/cangjie/envsetup.sh" >> $HOME/.bashrc
+# cat $HOME/.bashrc
+# echo "================================"
+# source $HOME/.bashrc
+
+for user_dir in /home/*
+do
+  # 检查是否为目录
+  if [ -d "$user_dir" ]; then
+    # 获取 .bashrc 的完整路径
+    bashrc="$user_dir/.bashrc"
+    content="source %{_libdir}/cangjie/envsetup.sh"
+    
+    # 检查 .bashrc 是否存在
+    if [ -f "$bashrc" ]; then
+      # 检查是否已经包含 "$content"
+      if ! grep -Fxq "$content" "$bashrc"; then
+        # 在 .bashrc 文件末尾添加 "$content"
+        echo "$content" >> "$bashrc"
+      fi
+    else
+      echo "$content" >> "$bashrc"
+    fi
+
+    source "$bashrc"
+  fi
+done
 
 
 %post
 #!/bin/bash
-echo "alias main='/usr/bin/%{name}'" >> $HOME/.bashrc
-source $HOME/.bashrc
+# echo "alias main='/usr/bin/%{name}'" >> $HOME/.bashrc
+# source $HOME/.bashrc
+
+for user_dir in /home/*
+do
+  # 检查是否为目录
+  if [ -d "$user_dir" ]; then
+    # 获取 .bashrc 的完整路径
+    bashrc="$user_dir/.bashrc"
+    content="alias main='/usr/bin/%{name}'"
+    
+    # 检查 .bashrc 是否存在
+    if [ -f "$bashrc" ]; then
+      # 检查是否已经包含 "$content"
+      if ! grep -Fxq "$content" "$bashrc"; then
+        # 在 .bashrc 文件末尾添加 "$content"
+        echo "$content" >> "$bashrc"
+      fi
+    else
+      echo "$content" >> "$bashrc"
+    fi
+
+    source "$bashrc"
+  fi
+done
 
 
 %postun
 #!/bin/bash
 rm -rf %{_libdir}/cangjie
-
-sed -i '\|source .*/cangjie/envsetup.sh|d' $HOME/.bashrc
-sed -i "\|alias main='/usr/bin/%{name}'|d" $HOME/.bashrc
+# sed -i '\|source .*/cangjie/envsetup.sh|d' $HOME/.bashrc
+# sed -i "\|alias main='/usr/bin/%{name}'|d" $HOME/.bashrc
+for user_dir in /home/*
+do
+  # 检查是否为目录
+  if [ -d "$user_dir" ]; then
+    # 获取 .bashrc 的完整路径
+    bashrc="$user_dir/.bashrc"
+    
+    # 检查 .bashrc 是否存在
+    if [ -f "$bashrc" ]; then
+      sed -i '\|source .*/cangjie/envsetup.sh|d' "$bashrc"
+      sed -i "\|alias main='/usr/bin/%{name}'|d" "$bashrc"
+      source "$bashrc"
+    fi
+  fi
+done
 
 
 %files
