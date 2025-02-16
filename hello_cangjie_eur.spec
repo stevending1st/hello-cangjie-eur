@@ -1,6 +1,6 @@
 Name:           hello-cangjie-eur
 Version:        0.0.8
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Cangjie Eur demo.
 License:        MIT
 Source:         https://github.com/stevending1st/%{name}/archive/refs/tags/v%{version}.tar.gz
@@ -68,21 +68,12 @@ rm -rf %{buildroot}
 cd %{_libdir}
 
 # 检查文件是否存在，并设置一个宏
-# if [ ! -f %{_libdir}/Cangjie-0.53.13-linux.tar.gz ]; then
-#   wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
-# fi
+if [ ! -f %{_libdir}/Cangjie-0.53.13-linux.tar.gz ]; then
+  wget -O Cangjie-0.53.13-linux.tar.gz %{download_url}
+fi
 
-# tar xvf Cangjie-0.53.13-linux.tar.gz
-# rm -rf Cangjie-0.53.13-linux.tar.gz
-
-# echo "================================"
-# echo $HOME/.bashrc
-# cat $HOME/.bashrc
-# echo "================================"
-# echo "source %{_libdir}/cangjie/envsetup.sh" >> $HOME/.bashrc
-# cat $HOME/.bashrc
-# echo "================================"
-# source $HOME/.bashrc
+tar xvf Cangjie-0.53.13-linux.tar.gz
+rm -rf Cangjie-0.53.13-linux.tar.gz
 
 for user_dir in /home/*
 do
@@ -109,10 +100,6 @@ done
 
 
 %post
-#!/bin/bash
-# echo "alias main='/usr/bin/%{name}'" >> $HOME/.bashrc
-# source $HOME/.bashrc
-
 for user_dir in /home/*
 do
   # 检查是否为目录
